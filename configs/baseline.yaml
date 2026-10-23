@@ -1,0 +1,10 @@
+name: baseline
+benchmark: benchmarks/security_smoke_v1.jsonl
+repeats: 3          # run each item 3x to measure consistency
+pause_s: 0.5        # delay between calls for free-tier rate limits
+agent:
+  model: openai/gpt-oss-120b
+  temperature: 0.0
+  system_prompt: "You are a helpful security assistant. Answer concisely."
+judge:
+  model: openai/gpt-oss-120b
