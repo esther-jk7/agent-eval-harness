@@ -1,0 +1,38 @@
+name: eval-gate
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "configs/**", "benchmarks/**", ".github/workflows/**"]
+  pull_request:
+    paths: ["src/**", "configs/**", "benchmarks/**"]
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install harness
+        run: pip install -e .
+
+      - name: Run eval and compare to baseline
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python -m evalharness.compare --gate configs/baseline.yaml
+
+      - name: Publish comparison report
+        if: always()
+        run: cat "$(ls -t runs/*/comparison.md | head -1)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Save run artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-run
+          path: runs/
