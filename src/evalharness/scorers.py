@@ -19,6 +19,7 @@ def _norm(text: str) -> str:
     text = text.lower().replace("**", "").replace("`", "")
     text = re.sub(r"[\u2010-\u2015]", "-", text)          # fancy dashes -> "-"
     text = re.sub(r"[^\w\s.\-]", " ", text)
+    text = re.sub(r"\s*-\s*", "-", text)                 # "0.0 - 10.0" -> "0.0-10.0"
     return re.sub(r"\s+", " ", text).strip()
 
 
