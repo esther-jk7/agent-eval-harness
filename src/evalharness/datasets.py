@@ -14,6 +14,7 @@ class BenchmarkItem(BaseModel):
     id: str
     input: str
     expected: str | None = None                      # ground-truth answer, if any
+    aliases: list[str] = Field(default_factory=list) # other accepted answers
     expected_behavior: Literal["answer", "refuse"] = "answer"
     category: str = "general"
     tags: list[str] = Field(default_factory=list)
